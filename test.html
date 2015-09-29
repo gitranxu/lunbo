@@ -6,12 +6,30 @@
 </head>
 <body>
 	
+	<div id="lunbo_id">
+		<ul>
+			<li>
+				<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
+			</li>
+			<li>
+				<img src="http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg" alt="图片2">
+			</li>
+			<li>
+				<img src="http://image.photophoto.cn/nm-6/018/030/0180300244.jpg" alt="图片3">
+			</li>
+			<li>
+				<img src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
+			</li>
+		</ul>
+	</div>
+
+	<script src="./jquery-1.9.1.min.js"></script>
 	<script src="./lunbo.js"></script>
 	<script>
-		window.onload = function(){
-			var lunbo = new LunBo({time:2000});
+		$().ready(function(){
+			var lunbo = new LunBo('lunbo_id',{time:2000});
 			lunbo.play();
-		}
+		});
 	</script>
 </body>
 </html>
