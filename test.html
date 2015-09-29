@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style>
+		.btn{width: 80px;height: 30px;background: orange;color: #fff;line-height: 30px;text-align: center;border-radius: 4px;cursor: pointer;margin: 4px;}
+	</style>
 </head>
 <body>
 	
@@ -22,13 +25,21 @@
 			</li>
 		</ul>
 	</div>
-
+	<div id="aaa" class="btn">暂停</div>
+	<div id="bbb" class="btn">继续</div>
 	<script src="./jquery-1.9.1.min.js"></script>
 	<script src="./lunbo.js"></script>
 	<script>
+		var fade = null;
 		$().ready(function(){
-			var lunbo = new LunBo('lunbo_id',{time:2000});
-			lunbo.play();
+			fade = new Fade('lunbo_id',{time:2000,direct:'left'});
+			fade.play();
+		});
+		$('#aaa').click(function(){
+			fade.pause();
+		});
+		$('#bbb').click(function(){
+			fade.play();
 		});
 	</script>
 </body>

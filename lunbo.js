@@ -17,6 +17,13 @@
 		this.img_width = this.opts.img_width;//默认图片的宽度
 		this.img_height = this.opts.img_height;//默认图片的高度
 		this.$imgs = $('#'+this.container_id).find('li img');//轮播的图片
+		
+		this.i_now = 0;//一开始时是0，当前li位置
+		this.i_times = 0;//播放次数，每播一次效果，则加1
+		this.$lis = $('#'+this.container_id).find('li');
+		this.li_length = this.$lis.length;
+		this.direct = this.opts.direct || 'right';//轮播方向一共两个方向(看小图标的方向，就是左右)
+
 		this.init();
 	}
 	LunBo.prototype = {
@@ -33,19 +40,32 @@
 				},this.time);
 			}
 		},
+		pause : function(){
+			clearInterval(this.timer);
+			this.timer = null;
+		},
 		xiaoguo : function(){
-			console.log('轮播效果展示');
+			this.xiaoguo_prcess();
+			this.set_index();
+		},
+		xiaoguo_prcess : function(){
+			console.log('父类具体效果实现');
+		},
+		set_index : function(){
+			if(this.direct=='right'){
+				this.i_times++;
+			}else{
+				this.i_times--;
+			}
+			this.i_now = this.i_times % this.li_length;
 		},
 		//设置图片的宽高,如果用户只设置了其中一种，则另外一个是auto
 		set_img_wh : function(){
 			if(this.img_width && this.img_height){//都设置了
-				console.log('宽高都设置了');
 				this.$imgs.css({width:this.img_width,height:this.img_height});
 			}else if(this.img_width){
-				console.log('宽设置了');
 				this.$imgs.css({width:this.img_width});
 			}else if(this.img_height){
-				console.log('高设置了');
 				this.$imgs.css({height:this.img_height});
 			}else{
 				console.log('没设置宽高时的默认宽高');
@@ -54,6 +74,16 @@
 		}
 	}
 
-	window.LunBo = window.LunBo || LunBo;
+	function Fade(container_id,opt){
+		LunBo.call(this,container_id,opt);
+	}
+	Fade.prototype = new LunBo('blank',{});//这里new的父类的对象传的参数只是为了满足创建时不报错，没有实际意义，因为子类有这两个参数，查找时肯定会在子类查找到，不会再去父类查找
+	Fade.prototype.xiaoguo_prcess = function(){
+		console.log('子类具体效果展示...');
+		$('#'+this.container_id).find('li').css({background:'#fff'});
+		$('#'+this.container_id).find('li').eq(this.i_now).css({background:'yellow'});
+	}
+
+	window.Fade = window.Fade || Fade;
 
 })(window);
