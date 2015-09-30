@@ -1,0 +1,4 @@
+.lunbo {position: relative;}
+.lunbo ul{position: relative;}
+.lunbo ul li{position: absolute;top: 0;left: 0;z-index: 1;display: none;}
+.lunbo ul li.active{display: block;}
