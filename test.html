@@ -29,9 +29,9 @@
 			<img src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
 		</li>
 	</ul>
-	<div id="lunbo_id" class="lunbo">
+	<div id="lunbo_id" class="lunbo" style="background:orange;">
 		<ul class="clear">
-			<li class="active">
+			<li class="nohid">
 				<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
 			</li>
 			<li>
@@ -43,7 +43,18 @@
 			<li>
 				<img src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
 			</li>
+			<li>
+				<img src="http://img4q.duitang.com/uploads/item/201306/15/20130615153227_QsMYY.png" alt="图片5">
+			</li>
 		</ul>
+		<!-- <div class="dots">
+			<ul class="clear">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+		</div> -->
 	</div>
 	<div id="aaa" class="btn">暂停</div>
 	<div id="bbb" class="btn">继续</div>
@@ -52,9 +63,11 @@
 	<script>
 		var fade = null;
 		$().ready(function(){
+
 			fade = new Fade('lunbo_id',{time:2000,direct:'left',img_height:300,complete:function(){
 				console.log('回调里面'+this.li_length);
-			}});
+			},move_pause:true});
+
 			fade.play();
 		});
 		$('#aaa').click(function(){

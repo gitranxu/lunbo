@@ -1,4 +1,8 @@
+.dots > ul {position: relative;list-style: none;}
+.dots > ul > li {float: left;width: 20px;height: 20px;line-height: 20px;text-align: center;border-radius: 50%;background: #9FD7DD;color: #fff;}
+.dots > ul > li.active{background: #00B2DE;}
+
 .lunbo {position: relative;}
-.lunbo ul{position: relative;}
-.lunbo ul li{position: absolute;top: 0;left: 0;z-index: 1;display: none;}
-.lunbo ul li.active{display: block;}
+.lunbo > ul{position: relative;}
+.lunbo > ul li{position: absolute;top: 0;left: 0;z-index: 1;display: none;}
+.lunbo > ul li.nohid{display: block;}
