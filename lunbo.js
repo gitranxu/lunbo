@@ -51,6 +51,16 @@
 		xiaoguo : function(){
 			this.xiaoguo_prcess();
 			this.set_index();
+			this.callback();
+		},
+		callback : function(){
+			if(this.complete){
+				if(typeof this.complete == 'function'){
+					this.complete.call(this);
+				}else{
+					alert('回调参数应该是一个函数');
+				}
+			}
 		},
 		xiaoguo_prcess : function(){
 			console.log('父类具体效果实现');

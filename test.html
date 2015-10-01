@@ -52,7 +52,9 @@
 	<script>
 		var fade = null;
 		$().ready(function(){
-			fade = new Fade('lunbo_id',{time:2000,direct:'left',img_height:300});
+			fade = new Fade('lunbo_id',{time:2000,direct:'left',img_height:300,complete:function(){
+				console.log('回调里面'+this.li_length);
+			}});
 			fade.play();
 		});
 		$('#aaa').click(function(){
