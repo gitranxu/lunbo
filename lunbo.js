@@ -1,6 +1,7 @@
 (function(window,undefined){
 
 	//多长时间执行一次，左右按钮是否显示，小图标是否显示
+	//ul必须要有固定的宽高,宽高等于li中最大的宽和最大的高
 	function LunBo(container_id,opt){
 		if(typeof container_id!='string'){
 			console.log('第一个参数请输入一个字符串的容器id');
@@ -24,20 +25,28 @@
 		this.i_times = 0;//播放次数，每播一次效果，则加1
 		this.$container = $('#'+this.container_id);
 		this.$ul = $('#'+this.container_id+' > ul');
-		this.$lis = this.$ul.find('li');
-		this.$imgs = this.$ul.find('li img');//轮播的图片
+		this.$lis = this.$ul.find('>li');
+		this.$imgs = this.$ul.find('>li img');//轮播的图片
+
+		this.$dots = null;
+		this.$dots_ul = null;
 		this.li_length = this.$lis.length;
 		this.direct = this.opts.direct || 'right';//轮播方向一共两个方向(看小图标的方向，就是左右)
-
-		this.init();
+		this.dot_align = this.opts.dot_align || 'left';
 	}
 	LunBo.prototype = {
 		constructor : LunBo,
 		init : function(){
+			console.log('init...');
+			var _this = this;
 			this.set_img_wh();//设置图片的宽高
+			setTimeout(function(){
+				_this.set_ul_wh();//设置ul的宽高
+				_this.set_dots();//设置小图标
+			},0);
+			
 			this.can_play = true;
-			this.set_ul();//设置ul的高度
-			this.set_dots();//设置小图标
+			
 			this.set_mouse_inout();//设置鼠标滑过时的效果
 		},
 		play : function(){
@@ -52,8 +61,8 @@
 			clearInterval(this.timer);
 			this.timer = null;
 		},
-		xiaoguo : function(){
-			this.set_index();
+		xiaoguo : function(index){
+			this.set_index(index);
 			this.xiaoguo_prcess();
 			this.move_dots();//让小图标移动起来
 			this.callback();
@@ -71,12 +80,17 @@
 			console.log('父类具体效果实现');
 		},
 		set_dots : function(){
-			//this.dots_show//
 			if(this.dots_show){//如果要显示小图标
 				this.$container.append(this.get_dots_html());
 				this.$dot_lis = this.$container.find('.dots li');
+
+		
+				this.set_dots_align();//设置小图标的对齐位置
+
+				this.set_dot_click();//设置小图标的点击事件
 			}
 		},
+		set_dot_click : function(){},
 		move_dots : function(){
 			//console.log('父类 '+this.prev+'======'+this.i_now);
 			if(this.dots_show){
@@ -96,18 +110,26 @@
 			html += '</ul></div>';
 			return html;
 		},
-		set_index : function(){
+		set_index : function(index){
 			if(this.direct=='right'){
 				this.i_times++;
 			}else{
 				this.i_times--;
 			}
-			this.i_now = this.i_times % this.li_length;
-			if(this.direct=='right'){
-				this.prev = this.i_now - 1;
+			if(index!=undefined){
+				this.prev = this.i_now;
+				this.i_now = index;
+				this.i_times = index;
 			}else{
-				this.prev = this.i_now - 0 + 1;
+				this.i_now = this.i_times % this.li_length;
+				if(this.direct=='right'){
+					this.prev = this.i_now - 1;
+				}else{
+					this.prev = this.i_now - 0 + 1;
+				}
 			}
+			
+			
 			
 		},
 		//设置图片的宽高,如果用户只设置了其中一种，则另外一个是auto
@@ -123,16 +145,49 @@
 				this.$imgs.css({width:200,height:100});
 			}
 		},
-		set_ul : function(){},
+		//ul必须要有固定的宽高,宽高等于li中最大的宽和最大的高
+		set_ul_wh : function(){
+			var max_h = this.$ul.outerHeight();
+			var max_w = this.$ul.outerWidth();
+			this.$lis.each(function(){
+				var me = $(this),
+				width = me.outerWidth(),
+				height = me.outerHeight();
+				if(width > max_w){
+					max_w = width;
+				}
+				if(height > max_h){
+					max_h = height;
+				}
+			});
+			this.ul_w = max_w;
+			this.ul_h = max_h;
+			this.$ul.css({width:max_w,height:max_h});
+		},
+		set_dots_align : function(){
+			this.$dots = this.$container.find('.dots');
+			this.$dots_ul = this.$dots.find('>ul');
+
+			var dots_width = this.$dots.width();
+			var u_width = this.$dots_ul.width();
+			var left = 0;//默认就是左
+			if(this.dot_align=='center'){
+				left = (dots_width - u_width)/2;
+			}else if(this.dot_align=='right'){
+				left = dots_width - u_width;
+			}
+
+			this.$dots_ul.css("left",left);
+		},
 		set_mouse_inout : function(){
 			var _this = this;
 			if(!this.move_pause){
 				return;//默认情况下如果不设置，则没有暂停效果
 			}
-			this.$lis.mouseenter(function(){
+			this.$container.mouseenter(function(){
 				_this.pause();
 			});
-			this.$lis.mouseleave(function(){
+			this.$container.mouseleave(function(){
 				_this.play();
 			});
 		}
@@ -141,6 +196,7 @@
 	function Fade(container_id,opt){
 		LunBo.call(this,container_id,opt);
 		this.i_now_z_index = 1;//当前最上面图片的z-index值，初始为1
+		this.init();
 	}
 	Fade.prototype = new LunBo('blank',{});//这里new的父类的对象传的参数只是为了满足创建时不报错，没有实际意义，因为子类有这两个参数，查找时肯定会在子类查找到，不会再去父类查找
 	Fade.prototype.xiaoguo_prcess = function(){
@@ -149,9 +205,13 @@
 		this.$lis.eq(this.prev).fadeOut('slow');
 		this.$lis.eq(this.i_now).css('z-index',this.i_now_z_index).fadeIn('slow');
 	}
-	Fade.prototype.set_ul = function(){
-		//设置图片的高度，就可以让其所在的li有高度，进而让ul也有高度
-		this.$ul.height(this.$lis.height());
+
+	Fade.prototype.set_dot_click = function(){
+		var _this = this;
+		this.$dots_ul.delegate('>li','click',function(index){
+			var index = _this.$dots_ul.find('>li').index($(this));
+			_this.xiaoguo(index);
+		});
 	}
 
 	window.Fade = window.Fade || Fade;
