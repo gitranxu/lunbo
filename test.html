@@ -3,18 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<link rel="stylesheet" href="fade.css">
+	<link rel="stylesheet" href="base.css">
 	<style>
-		*{padding: 0;margin: 0;}
-		li{list-style: none;}
-		.btn{width: 80px;height: 30px;background: orange;color: #fff;line-height: 30px;text-align: center;border-radius: 4px;cursor: pointer;margin: 4px;}
-
-		.clear{zoom:1;}
-		.clear:after{content:"";display: block;clear: both;}
-		.test li{float: left;}
-		.test li img{height: 50px;}
-
-
 		#test2{
 			width: 400px;
 			background: yellow;
@@ -26,42 +16,42 @@
 </head>
 <body>
 	<div id="lunbo_id" class="lunbo" style="background:orange;">
-		<ul class="clear">
+		<ul>
 			<li class="nohid">
-				<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
+				<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" _src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
 			</li>
 			<li>
-				<img src="http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg" alt="图片2">
+				<img src="" _src="http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg" alt="图片2">
 			</li>
 			<li>
-				<img src="http://image.photophoto.cn/nm-6/018/030/0180300244.jpg" alt="图片3">
+				<img src="" _src="http://image.photophoto.cn/nm-6/018/030/0180300244.jpg" alt="图片3">
 			</li>
 			<li>
-				<img src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
+				<img src="" _src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
 			</li>
 			<li>
-				<img src="http://img4q.duitang.com/uploads/item/201306/15/20130615153227_QsMYY.png" alt="图片5">
+				<img src="" _src="http://img4q.duitang.com/uploads/item/201306/15/20130615153227_QsMYY.png" alt="图片5">
 			</li>
 		</ul>
 	</div>
 
 	<div id="test2">
 		<div id="lunbo_id2" class="lunbo" style="background:orange;">
-			<ul class="clear">
+			<ul>
 				<li class="nohid">
-					<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
+					<img src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" _src="http://i6.topit.me/6/5d/45/1131907198420455d6o.jpg" alt="图片1">
 				</li>
 				<li>
-					<img src="http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg" alt="图片2">
+					<img src="" _src="http://pic.nipic.com/2007-11-09/2007119122519868_2.jpg" alt="图片2">
 				</li>
 				<li>
-					<img src="http://image.photophoto.cn/nm-6/018/030/0180300244.jpg" alt="图片3">
+					<img src="" _src="http://image.photophoto.cn/nm-6/018/030/0180300244.jpg" alt="图片3">
 				</li>
 				<li>
-					<img src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
+					<img src="" _src="http://pica.nipic.com/2007-11-09/200711912453162_2.jpg" alt="图片4">
 				</li>
 				<li>
-					<img src="http://img4q.duitang.com/uploads/item/201306/15/20130615153227_QsMYY.png" alt="图片5">
+					<img src="" _src="http://img4q.duitang.com/uploads/item/201306/15/20130615153227_QsMYY.png" alt="图片5">
 				</li>
 			</ul>
 		</div>
@@ -72,20 +62,21 @@
 	<div id="aaa" class="btn">暂停</div>
 	<div id="bbb" class="btn">继续</div>
 	<script src="./jquery-1.9.1.min.js"></script>
-	<script src="./lunbo.js"></script>
+	<script src="./lunbo_base.js"></script>
+	<script src="./lunbo_fade.js"></script>
 	<script>
 		var fade = null;
 		$().ready(function(){
 
 			fade = new Fade('lunbo_id',{time:1500,direct:'left',img_height:300,dots_show:true,complete:function(){
-				console.log('回调里面'+this.li_length);
-			},move_pause:true});
+				//console.log('回调里面'+this.li_length);
+			},move_pause:true,can_lazy:false});
 
 			fade.play();
 
 			fade2 = new Fade('lunbo_id2',{time:2000,direct:'right',img_width:280,dots_show:true,complete:function(){
-				console.log('回调里面2'+this.li_length);
-			},move_pause:true,dot_align:'center'});
+				//console.log('回调里面2'+this.li_length);
+			},move_pause:true,dot_align:'center',can_lazy:true});
 
 			fade2.play();
 		});

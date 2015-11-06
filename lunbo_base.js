@@ -2,6 +2,7 @@
 
 	//多长时间执行一次，左右按钮是否显示，小图标是否显示
 	//ul必须要有固定的宽高,宽高等于li中最大的宽和最大的高
+	//如果用了轮播的懒加载，则一定要提前就规划好ul的宽高，即最好图片的宽高是一致的且提前知道的
 	function LunBo(container_id,opt){
 		if(typeof container_id!='string'){
 			alert('第一个参数请输入一个字符串的容器id');
@@ -18,7 +19,9 @@
 		this.move_pause = this.opts.move_pause;//是否鼠标滑过时暂停
 		this.img_width = this.opts.img_width;//默认图片的宽度
 		this.img_height = this.opts.img_height;//默认图片的高度
-		
+
+		this.can_lazy = this.opts.can_lazy;//默认不进行懒加载
+		this.default_src = this.opts.default_src || '';//默认src为空，也可能为1象素图片
 		
 		this.i_now = 0;//一开始时是0，当前li位置
 		this.prev = 0;//前一个(跟i_now和direct有关)
@@ -39,6 +42,7 @@
 		init : function(){
 			//console.log('init...');
 			var _this = this;
+			this.loadcss();//引入相关CSS文件
 			this.set_img_wh();//设置图片的宽高
 			setTimeout(function(){
 				_this.set_ul_wh();//设置ul的宽高
@@ -49,6 +53,7 @@
 			
 			this.set_mouse_inout();//设置鼠标滑过时的效果
 		},
+		loadcss : function(){},
 		play : function(){
 			var _this = this;
 			if(this.can_play){
@@ -65,7 +70,19 @@
 			this.set_index(index);
 			this.xiaoguo_prcess();
 			this.move_dots();//让小图标移动起来
+			if(this.can_lazy){
+				this.lazy_load();
+			}
 			this.callback();
+		},
+		lazy_load : function(){
+			var $li_img_now = this.$lis.eq(this.i_now).find('>img');
+			var src = $li_img_now.attr('src');
+
+			if(src == this.default_src){
+				var _src = $li_img_now.attr('_src');
+				$li_img_now.attr('src',_src);
+			}
 		},
 		callback : function(){
 			if(this.complete){
@@ -193,27 +210,6 @@
 		}
 	}
 
-	function Fade(container_id,opt){
-		LunBo.call(this,container_id,opt);
-		this.i_now_z_index = 1;//当前最上面图片的z-index值，初始为1
-		this.init();
-	}
-	Fade.prototype = new LunBo('blank',{});//这里new的父类的对象传的参数只是为了满足创建时不报错，没有实际意义，因为子类有这两个参数，查找时肯定会在子类查找到，不会再去父类查找
-	Fade.prototype.xiaoguo_prcess = function(){
-		//console.log(this.prev+'---子类具体效果展示...'+this.i_now);
-		this.i_now_z_index++;
-		this.$lis.eq(this.prev).fadeOut('slow');
-		this.$lis.eq(this.i_now).css('z-index',this.i_now_z_index).fadeIn('slow');
-	}
-
-	Fade.prototype.set_dot_click = function(){
-		var _this = this;
-		this.$dots_ul.delegate('>li','click',function(index){
-			var index = _this.$dots_ul.find('>li').index($(this));
-			_this.xiaoguo(index);
-		});
-	}
-
-	window.Fade = window.Fade || Fade;
+	window.LunBo = window.LunBo || LunBo;
 
 })(window);
